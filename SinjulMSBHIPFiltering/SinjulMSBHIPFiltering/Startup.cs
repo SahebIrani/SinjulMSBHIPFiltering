@@ -1,20 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetTools;
-using ZNetCS.AspNetCore.IPFiltering.DependencyInjection;
-using NLog;
-using NLog.Extensions.Logging;
-using NLog.Targets;
-using System.IO;
 using SinjulMSBHIPFiltering.Filters;
+using SinjulMSBHIPFiltering.Middlewares;
 
 namespace SinjulMSBHIPFiltering
 {

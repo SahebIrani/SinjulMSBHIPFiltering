@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace SinjulMSBHIPFiltering.Filters
+namespace SinjulMSBHIPFiltering.Middlewares
 {
 	public class AdminWhiteListMiddleware
 	{
