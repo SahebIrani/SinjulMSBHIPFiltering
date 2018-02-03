@@ -1,0 +1,9 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+      ViewData[ "Title" ] = "GetIP";
+}
+
+<h2 class="text-danger text-center">
+      Client IP: @HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString( )
+</h2>
