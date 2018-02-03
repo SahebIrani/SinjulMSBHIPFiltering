@@ -1,9 +1,21 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+﻿@model MaxMind.GeoIP2.Responses.CityResponse
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
       ViewData[ "Title" ] = "GetIP";
 }
 
-<h2 class="text-danger text-center">
-      Client IP: @HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString( )
-</h2>
+<section class="text-center lead">
+      <br />
+      <div class="col-md-12 text-danger">
+            Client IP:<strong>@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString( )</strong> ||
+            <strong>@ViewData[ "GetIP" ]</strong>
+      </div>
+      <hr />
+      <div class="col-md-12">
+            <p class="text-warning">public IP:<strong>31.58.123.0</strong></p>
+            <p class="text-success">Hey there, welcome visitor from <strong>@Model.City, @Model.Country!</strong></p>
+            <p class="text-info">Your time zone is <strong>@Model.Location.TimeZone</strong></p>
+      </div>
+</section>

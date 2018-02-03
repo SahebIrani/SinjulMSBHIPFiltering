@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using MaxMind.GeoIP2;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using SinjulMSBHIPFiltering.Filters;
 using SinjulMSBHIPFiltering.Models;
 
 namespace SinjulMSBHIPFiltering.Controllers
@@ -12,10 +12,17 @@ namespace SinjulMSBHIPFiltering.Controllers
 	public class HomeController: Controller
 	{
 		private IHttpContextAccessor _accessor;
+		private readonly IHostingEnvironment _hostingEnvironment;
+		private ILogger<HomeController> _logger;
 
-		public HomeController ( IHttpContextAccessor accessor )
+		public HomeController ( IHttpContextAccessor accessor ,
+						IHostingEnvironment hostingEnvironment ,
+						ILogger<HomeController> logger
+					    )
 		{
 			_accessor=accessor;
+			_hostingEnvironment = hostingEnvironment;
+			_logger = logger;
 		}
 
 		public IActionResult Index ( )
@@ -23,10 +30,29 @@ namespace SinjulMSBHIPFiltering.Controllers
 			return View( );
 		}
 
+		[ServiceFilter( typeof( ClientIdCheckFilter ) )]
 		public IActionResult GetIP ( )
 		{
+			_logger.LogDebug( "successful get.." );
+
 			ViewData[ "GetIP" ] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString( );
-			return View( );
+
+			//download link GeoLite2-City.mmdb => https://dev.maxmind.com/geoip/geoip2/geolite2/
+			//http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+			using ( var reader = new DatabaseReader( _hostingEnvironment.ContentRootPath + "\\GeoLite2-City.mmdb" ) )
+			{
+				// Determine the IP Address of the request
+				var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString() == "::1"
+					//Your public IP address
+					? "31.58.123.0"
+					: HttpContext.Connection.RemoteIpAddress.ToString()
+				;
+
+				// Get the city from the IP Address
+				var city = reader.City(ipAddress);
+
+				return View( city );
+			}
 		}
 
 		public IActionResult About ( )
